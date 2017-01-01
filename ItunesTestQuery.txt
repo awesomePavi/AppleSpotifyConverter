@@ -1,0 +1,5 @@
+https://itunes.apple.com/search?term=drake&entity=song&limit=1
+
+https://itunes.apple.com/search?entity=song&term=forever&limit=25
+
+https://itunes.apple.com/search?entity=song&term=forever+drake&limit=1

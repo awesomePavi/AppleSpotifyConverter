@@ -1,0 +1,30 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+</script>
+</head>
+<body>
+<h1>HELLO</h1>
+<button onclick="loginspotify()"></button>
+<script>
+    loginspotify = function() {
+        {
+            var e = 400,
+                    n = 500,
+                    r = (screen.width / 2 - e / 2, screen.height / 2 - n / 2, {
+                        client_id: "06eb65e8fccd4ee5b2f8cd7933f1d413",
+                        redirect_uri: "http://pavipath.com",
+                        scope: "user-read-private playlist-read-private playlist-modify-public playlist-modify-private",
+                        response_type: "token"
+                    }),
+                    i = "https://accounts.spotify.com/authorize?" + "client_id=06eb65e8fccd4ee5b2f8cd7933f1d413";
+                    i += "&response_type=code&redirect_uri=http%3a%2f%2fpavipath.com%2fcallback.html";
+                    i += "&scope=user-read-private%20playlist-read-private";
+                    i += "&show_dialog=true";
+
+            tmp = window.open(i, "Spotify", "WIDTH=400,HEIGHT=600")
+        }
+    }
+</script>
+</body>
+</html>
