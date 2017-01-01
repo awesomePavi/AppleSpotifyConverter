@@ -6,7 +6,11 @@
 <body>
 <h1>CallBack</h1>
 <p id="show"></p>
+
 <script>
+
+   var playlists = [];
+   var goThrough = 0;
 
             var query = window.location.href.split("#")[1];
             console.log(query);
@@ -14,11 +18,12 @@
             if (query.includes("denied"))
             {
                 console.log("end");
+
             }else {
                 breakDownQuery(query);
             }
 
-            function breakDownQuery(query){
+            function breakDownQuery(query) {
                 partsQuery = {};
 
                 var parts = query.split('&');
@@ -29,17 +34,62 @@
                 console.log(partsQuery);
 
                 document.getElementById("show").innerHTML = query;
+            }
+
+            function populatePlaylist(offSet){
 
                 $.ajax({
-                    url: 'https://api.spotify.com/v1/me',
+                    url: 'https://api.spotify.com/v1/me/playlists?offset='+offSet+'&limit=20',
                     headers: {
-                        'Authorization': partsQuery["token_type"] + partsQuery["access_token"]
+                        'Authorization': "Bearer " + partsQuery["access_token"]
                     },
                     success: function(response) {
                         console.log(response);
+                        var flipThrough = response["items"].length;
+                        for (var i =0; i < flipThrough; i++){
+                            playlists.push(response["items"][i]);
+                            goThrough++;
+                        }
+
+                        if(goThrough < response["total"]){
+                            populatePlaylist(goThrough);
+                        }else{
+                            displayPlayLists();
+                        }
+
+                        console.log(playlists);
                     }
                 });
             }
+
+            function displayPlayLists(){
+                var tble = document.createElement("TABLE");
+                tble.setAttribute("id", "playlists");
+
+
+                for (var i =0; i < goThrough; i++) {
+                    console.log(i);
+                    var y = document.createElement("TR");
+                    y.setAttribute("id", "myTr");
+                    tble.appendChild(y);
+                    var z = document.createElement("TD");
+                    var t1  = document.createTextNode(i+1);
+                    var t2 = document.createTextNode(playlists[i]['name']);
+
+                    z.appendChild(t1);
+                    z.appendChild(t2);
+                    y.appendChild(z);
+                }
+                document.body.appendChild(tble);
+                document.getElementById("show").innerHTML = "vola";
+            }
+
+   populatePlaylist(0);
+
+
+
+
+
 </script>
 </body>
 </html>
