@@ -5,12 +5,14 @@
 </head>
 <body>
 <h1>CallBack</h1>
-<p id="show"></p>
+<h2 id="show"></h2>
 
 <script>
 
    var playlists = [];
+   var songs = [];
    var goThrough = 0;
+   var userId = "";
 
             var query = window.location.href.split("#")[1];
             console.log(query);
@@ -34,6 +36,18 @@
                 console.log(partsQuery);
 
                 document.getElementById("show").innerHTML = query;
+
+                $.ajax({
+                    url: 'https://api.spotify.com/v1/me',
+                    headers: {
+                        'Authorization': "Bearer " + partsQuery["access_token"]
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        userId = response['id']
+                        return ;
+                    }
+                });
             }
 
             function populatePlaylist(offSet){
@@ -55,6 +69,7 @@
                             populatePlaylist(goThrough);
                         }else{
                             displayPlayLists();
+                            return;
                         }
 
                         console.log(playlists);
@@ -70,19 +85,76 @@
                 for (var i =0; i < goThrough; i++) {
                     console.log(i);
                     var y = document.createElement("TR");
-                    y.setAttribute("id", "myTr");
+                    y.setAttribute("id", i);
+                    y.style.backgroundColor= "#AAAAAA";
+                    y.onclick = tracks;
+                    if (i % 2 == 0){
+                        y.style.backgroundColor= "#EEEEEE";
+                    }
                     tble.appendChild(y);
                     var z = document.createElement("TD");
                     var t1  = document.createTextNode(i+1);
-                    var t2 = document.createTextNode(playlists[i]['name']);
+                    var t2 = document.createElement("img");
+                    t2.src = playlists[i]['images'][0]['url'];
+                    t2.height = 100;
+                    t2.width = 100;
+                    var t3 = document.createElement("h3");
+                    t3.innerHTML = (playlists[i]['name']);
+                    t3.verticalAlign = "middle";
 
-                    z.appendChild(t1);
+                    //z.appendChild(t1);
                     z.appendChild(t2);
+                    z.appendChild(t3);
                     y.appendChild(z);
                 }
+
+
                 document.body.appendChild(tble);
-                document.getElementById("show").innerHTML = "vola";
+                document.getElementById("show").innerHTML = "Click a playlist";
             }
+
+            function tracks(){
+                var playlistNum = this.id;
+                document.getElementById("show").innerHTML = playlistNum;
+                var playlistID = playlists[playlistNum]['id'];
+                var urlUse = playlists[playlistNum]['href'];
+                goThrough = 0;
+                songs = [];
+                trackPopulate(urlUse,0);
+            }
+
+            function trackPopulate(urlUse,offSet){
+                $.ajax({
+                    url: urlUse+'?offset='+offSet+'&limit=100',
+                    headers: {
+                        'Authorization': "Bearer " + partsQuery["access_token"]
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        var flipThrough = response["tracks"]["items"].length;
+                        for (var i =0; i < flipThrough; i++){
+                            songs.push(response["tracks"]["items"][i]);
+                            goThrough++;
+                        }
+
+                        if(goThrough < response["tracks"]["total"]){
+                            trackPopulate(goThrough);
+                        }else{
+                            displaySongs();
+                            return;
+                        }
+
+                        console.log(songs);
+                    }
+                });
+            }
+
+   function displaySongs(){
+       var tble = document.getElementById("playlists");
+       document.body.removeChild(tble);
+       console.log(songs);
+       document.getElementById("show").innerHTML = songs.length;
+   }
 
    populatePlaylist(0);
 
