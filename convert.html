@@ -18,13 +18,13 @@
                         response_type: "token"
                     }),
                     i = "https://accounts.spotify.com/authorize?" + "client_id=06eb65e8fccd4ee5b2f8cd7933f1d413";
-                    i += "&response_type=code";
+                    i += "&response_type=token";
                     i += "&redirect_uri=http%3a%2f%2fpavipath.com%2fSpotifyToApple%2fcallback.html";
                     i += "&scope=user-read-private%20playlist-read-private";
                     i += "&show_dialog=true";
                     i += "&state=awesomePaviFindMeEverywhere"
 
-            tmp = window.open(i, "Spotify", "WIDTH=400,HEIGHT=600")
+            tmp = window.open(i, "Spotify", "_Blank")
         }
     }
 </script>

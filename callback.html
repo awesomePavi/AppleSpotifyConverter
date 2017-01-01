@@ -8,37 +8,38 @@
 <p id="show"></p>
 <script>
 
-            var query = window.location.search;
+            var query = window.location.href.split("#")[1];
             console.log(query);
-            query = query.substr(1);
 
             if (query.includes("denied"))
             {
                 console.log("end");
             }else {
+                breakDownQuery(query);
+            }
 
-                partsQuery = [];
+            function breakDownQuery(query){
+                partsQuery = {};
 
                 var parts = query.split('&');
                 for (var i = 0; i < parts.length; i++) {
                     splitOn = parts[i].split('=');
-                    partsQuery.push(splitOn[1]);
+                    partsQuery[splitOn[0]] = splitOn[1];
                 }
                 console.log(partsQuery);
 
                 document.getElementById("show").innerHTML = query;
 
-                $.post("https://accounts.spotify.com/api/token",
-                        {
-                            grant_type: "authorization_code",
-                            code: partsQuery[0],
-                            redirect_uri: "http%3a%2f%2fpavipath.com%2fSpotifyToApple%2fcallback.html"
-                        },
-                        function (data) {
-                            alert(data);
-                        });
+                $.ajax({
+                    url: 'https://api.spotify.com/v1/me',
+                    headers: {
+                        'Authorization': partsQuery["token_type"] + partsQuery["access_token"]
+                    },
+                    success: function(response) {
+                        console.log(response);
+                    }
+                });
             }
-
 </script>
 </body>
 </html>
