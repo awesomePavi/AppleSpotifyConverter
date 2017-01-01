@@ -4,16 +4,14 @@
     </script>
 </head>
 <body>
-<h1>CallBack</h1>
+<a id="download"><h1>CallBack</h1></a>
 <h2 id="show"></h2>
-
 <script>
 
    var playlists = [];
    var songs = [];
    var goThrough = 0;
    var userId = "";
-
 
             var query = window.location.href.split("#")[1];
             console.log(query);
@@ -127,22 +125,40 @@
 
             function trackPopulate(urlUse,offSet){
                 $.ajax({
-                    url: urlUse+'?offset='+offSet+'&limit=100',
+                    url: urlUse,
                     headers: {
                         'Authorization': "Bearer " + partsQuery["access_token"]
                     },
                     success: function(response) {
                         console.log(response);
-                        var flipThrough = response["tracks"]["items"].length;
-                        for (var i =0; i < flipThrough; i++){
-                            songs.push(response["tracks"]["items"][i]);
-                            goThrough++;
+                        var total = 0;
+                        try {
+                            total = response["tracks"]["total"];
+                            var flipThrough = response["tracks"]["items"].length;
+                            for (var i = 0; i < flipThrough; i++) {
+                                songs.push(response["tracks"]["items"][i]);
+                                goThrough++;
+                            }
+                        }catch (e){
+                            console.log(e);
+                            total = response["total"];
+                            var flipThrough = response["items"].length;
+                            for (var i = 0; i < flipThrough; i++) {
+                                songs.push(response["items"][i]);
+                                goThrough++;
+                            }
                         }
 
-                        if(goThrough < response["tracks"]["total"]){
-                            trackPopulate(urlUse,goThrough);
+                        if(goThrough < total){
+                            var next = "";
+                            try{
+                                next = response["tracks"]["next"];
+                            }catch (e){
+                                console.log(e);
+                                next = response["next"];
+                            }
+                            trackPopulate(next,goThrough);
                         }else{
-                            console.log(response["tracks"]["total"]);
                             displaySongs();
                             return;
                         }
@@ -155,8 +171,57 @@
    function displaySongs(){
        var tble = document.getElementById("playlists");
        document.body.removeChild(tble);
+
        console.log(songs);
+
        document.getElementById("show").innerHTML = songs.length;
+       createFile(songs);
+   }
+
+   function playListAdd(name, artist, composer, album){
+       var n = name;
+       var a = artist;
+       var c = composer;
+       var aa  = album;
+    if (!name){
+        n = "	";
+    }
+    if (!artist){
+        a = "	";
+    }
+    if (!composer){
+        c = "	";
+    }
+    if (!album){
+        aa = "	";
+    }
+
+    return "\n"+n+"	"+a+"	"+c+"	"+aa+"								0	0	0	0	0	0	0					256	44100		Apple Music AAC audio file							";
+
+   }
+   var textFile
+   function createFile(songs){
+       var playListDL = [];
+       playListDL.push("Name	Artist	Composer	Album	Grouping	Work	Movement Number	Movement Count	Movement Name	Genre	Size	Time	Disc Number	Disc Count	Track Number	Track Count	Year	Date Modified	Date Added	Bit Rate	Sample Rate	Volume Adjustment	Kind	Equalizer	Comments	Plays	Last Played	Skips	Last Skipped	My Rating	Location");
+
+               $.ajax({
+                   url: "https://itunes.apple.com/search?term=forever+drake&country=CA&media=music&limit=1&lang=en_us&explicit=Yes",
+
+                   success: function(response) {
+                       console.log(response);
+                   }
+               });
+       for (var i = 0; i < songs.length; i++){
+            console.log (songs[i]["track"]["name"]);
+           console.log (songs[i]["track"]["name"]);
+       }
+       playListDL.push(playListAdd("One Minute","Isaiah Dreads", "Thomas Broderick, Anthony Bamgboye & Isaiah Hamilton","Lone Wolf - EP"));
+
+       var blob = new Blob(playListDL, {type: "text/plain;charset=utf-8"});
+       textFile = window.URL.createObjectURL(blob);
+       var link = document.getElementById('download');
+       link.href = textFile;
+       link.setAttribute("download","test5.txt");
    }
 
    populatePlaylist(0);
