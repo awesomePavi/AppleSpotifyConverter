@@ -14,6 +14,7 @@
    var goThrough = 0;
    var userId = "";
 
+
             var query = window.location.href.split("#")[1];
             console.log(query);
 
@@ -120,7 +121,8 @@
                 var urlUse = playlists[playlistNum]['href'];
                 goThrough = 0;
                 songs = [];
-                trackPopulate(urlUse,0);
+                console.log(urlUse);
+                trackPopulate(urlUse,goThrough);
             }
 
             function trackPopulate(urlUse,offSet){
@@ -138,8 +140,9 @@
                         }
 
                         if(goThrough < response["tracks"]["total"]){
-                            trackPopulate(goThrough);
+                            trackPopulate(urlUse,goThrough);
                         }else{
+                            console.log(response["tracks"]["total"]);
                             displaySongs();
                             return;
                         }
