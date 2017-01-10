@@ -193,20 +193,29 @@
                }
                tble.appendChild(y);
                var z = document.createElement("TD");
-               var t1  = document.createTextNode(i+1);
-               var t2 = document.createElement("img");
-               t2.src = songs[i]['track']['album']['images'][0]['url'];
-               t2.height = 100;
-               t2.width = 100;
-               var t3 = document.createElement("h3");
-               t3.innerHTML = (songs[i]['track']['name']);
-               t3.verticalAlign = "middle";
+               var spotyEmbed = document.createElement("iframe");
+               spotyEmbed.src = "https://embed.spotify.com/?uri="+songs[i]['track']["uri"];
+               spotyEmbed.setAttribute("frameborder","0");
+               spotyEmbed.setAttribute("allowtransparency","true");
+               spotyEmbed.setAttribute("width","100%");
+               spotyEmbed.setAttribute("height","110px");
+
+//               var t1  = document.createTextNode(i+1);
+//               var t2 = document.createElement("img");
+//               t2.src = songs[i]['track']['album']['images'][0]['url'];
+//               t2.height = 100;
+//               t2.width = 100;
+//               var t3 = document.createElement("h3");
+//               t3.innerHTML = (songs[i]['track']['name']);
+//               t3.verticalAlign = "middle";
+
                var zz = document.createElement("TD");
                zz.setAttribute("id", i+"APPLEPLAYER");
 
                //z.appendChild(t1);
-               z.appendChild(t2);
-               z.appendChild(t3);
+//               z.appendChild(t2);
+//               z.appendChild(t3);
+               z.appendChild(spotyEmbed);
                y.appendChild(z);
                y.appendChild(zz);
            }
