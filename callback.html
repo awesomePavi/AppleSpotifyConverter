@@ -2,10 +2,16 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
     </script>
+    <link href="./load.css" rel="stylesheet" type="text/css">
 </head>
 <body style="width: 800px; margin: 0px auto;">
-<a id="download"><h1>CallBack</h1></a>
-<h2 id="show"></h2>
+
+<h1 id="download">CallBack</h1>
+<div style="float: left">
+    <h2 id="show" style ="margin-bottom: 0;float: left;"></h2>
+    <div id = "load" class="none"></div>
+</div>
+<div style="clear: both;"></div>
 <script>
 
    var playlists = [];
@@ -118,6 +124,7 @@
             function tracks(){
                 var playlistNum = this.id;
                 document.getElementById("show").innerHTML = playlistNum;
+                document.getElementById("download").innerHTML = playlists[playlistNum]["name"];
                 var playlistID = playlists[playlistNum]['id'];
                 var urlUse = playlists[playlistNum]['href'];
                 goThrough = 0;
@@ -223,6 +230,8 @@
 
            document.body.appendChild(tble);
            document.getElementById("show").innerHTML = "Finding Itunes Tracks";
+       document.getElementById("load").className = "loader";
+
 
 
 
@@ -242,33 +251,36 @@
        search += album;
        search = search.split(' ').join('+');
 
-       //countDown++;
 
        var tmp = document.createElement("script");
        tmp.src = "https://itunes.apple.com/search?term="+search+"&media=music&limit=1&explicit=Yes&callback=addItunesSong";
-       tmp.onerror = addItunesSong();
        document.body.appendChild(tmp);
    }
 
    function addItunesSong(v){
-       songsItunes.push(v);
-       if (!v){
-           v = {"results":{"trackid":"255025042"}};
+       try {
+           songsItunes.push(v);
+           console.log(v);
+           if (!v) {
+               v = {"results": [{"trackid": "255025042"}]};
+           }
+           console.log(songsItunes);
+           var tble = document.getElementById(countDown + "APPLEPLAYER");
+           var tmp = document.createElement("iframe");
+           tmp.src = "//tools.applemusic.com/embed/v1/song/" + v["results"][0]["trackId"] + "?country=us";
+           tmp.setAttribute("height", "110px");
+           tmp.setAttribute("width", "auto");
+           tmp.setAttribute("frameborder", "0");
+
+           tble.appendChild(tmp);
+
+       }catch(e){
+
        }
-       console.log(songsItunes);
-       var tble = document.getElementById(countDown+"APPLEPLAYER");
-        var tmp = document.createElement("iframe");
-       tmp.src = "//tools.applemusic.com/embed/v1/song/"+v["results"]["trackId"]+"?country=us";
-       tmp.setAttribute("height","110px");
-       tmp.setAttribute("width","auto");
-       tmp.setAttribute("frameborder","0");
-
-       tble.appendChild(tmp);
-
-
        countDown++;
        if (countDown >= songs.length){
           // download();
+           document.getElementById("load").className = "none";
        }
    }
 
