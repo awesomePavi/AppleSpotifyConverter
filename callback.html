@@ -268,7 +268,7 @@
 
        countDown++;
        if (countDown >= songs.length){
-           download();
+          // download();
        }
    }
 
@@ -283,7 +283,7 @@
            }
            album = songs[i]["track"]["album"]["name"];
            itunesSearch(name, artist, album);
-           setTimeout(function() { findItunesEquiv(i+1,songs); }, 5000);
+           setTimeout(function() { findItunesEquiv(i+1,songs); }, 4000);
        }
    }
 
