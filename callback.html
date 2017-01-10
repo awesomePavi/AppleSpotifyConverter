@@ -3,15 +3,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
     </script>
 </head>
-<body>
+<body style="width: 800px; margin: 0px auto;">
 <a id="download"><h1>CallBack</h1></a>
 <h2 id="show"></h2>
 <script>
 
    var playlists = [];
    var songs = [];
+   var songsItunes = [];
    var goThrough = 0;
    var userId = "";
+   var countDown = 0;
 
             var query = window.location.href.split("#")[1];
             console.log(query);
@@ -78,6 +80,7 @@
 
             function displayPlayLists(){
                 var tble = document.createElement("TABLE");
+                tble.style = ""
                 tble.setAttribute("id", "playlists");
 
 
@@ -174,15 +177,115 @@
 
        console.log(songs);
 
-       document.getElementById("show").innerHTML = songs.length;
-       createFile(songs);
+            tble = document.createElement("TABLE");
+           tble.style = ""
+           tble.setAttribute("id", "song");
+
+
+           for (var i =0; i < goThrough; i++) {
+               console.log(i);
+               var y = document.createElement("TR");
+               y.setAttribute("id", i);
+               y.style.backgroundColor= "#AAAAAA";
+            //  y.onclick = tracks;
+               if (i % 2 == 0){
+                   y.style.backgroundColor= "#EEEEEE";
+               }
+               tble.appendChild(y);
+               var z = document.createElement("TD");
+               var t1  = document.createTextNode(i+1);
+               var t2 = document.createElement("img");
+               t2.src = songs[i]['track']['album']['images'][0]['url'];
+               t2.height = 100;
+               t2.width = 100;
+               var t3 = document.createElement("h3");
+               t3.innerHTML = (songs[i]['track']['name']);
+               t3.verticalAlign = "middle";
+               var zz = document.createElement("TD");
+               zz.setAttribute("id", i+"APPLEPLAYER");
+
+               //z.appendChild(t1);
+               z.appendChild(t2);
+               z.appendChild(t3);
+               y.appendChild(z);
+               y.appendChild(zz);
+           }
+
+
+           document.body.appendChild(tble);
+           document.getElementById("show").innerHTML = "Finding Itunes Tracks";
+
+
+
+
+      // document.getElementById("show").innerHTML = songs.length;
+
+       findItunesEquiv(0,songs);
    }
 
-   function playListAdd(name, artist, composer, album){
+   function itunesSearch(name, artist, album){
+       var search = name;
+       search+="+";
+       for (var j =0; j < artist; j ++) {
+           search += artist[j];
+           search+="+";
+       }
+       search += album;
+       search = search.split(' ').join('+');
+
+       //countDown++;
+
+       var tmp = document.createElement("script");
+       tmp.src = "https://itunes.apple.com/search?term="+search+"&media=music&limit=1&explicit=Yes&callback=addItunesSong";
+       tmp.onerror = addItunesSong();
+       document.body.appendChild(tmp);
+   }
+
+   function addItunesSong(v){
+       songsItunes.push(v);
+       if (!v){
+           v = {"results":{"trackid":"255025042"}};
+       }
+       console.log(songsItunes);
+       var tble = document.getElementById(countDown+"APPLEPLAYER");
+        var tmp = document.createElement("iframe");
+       tmp.src = "//tools.applemusic.com/embed/v1/song/"+v["results"]["trackId"]+"?country=us";
+       tmp.setAttribute("height","110px");
+       tmp.setAttribute("width","auto");
+       tmp.setAttribute("frameborder","0");
+
+       tble.appendChild(tmp);
+
+
+       countDown++;
+       if (countDown >= songs.length){
+           download();
+       }
+   }
+
+   function findItunesEquiv(i,songs){
+       if (i >= songs.length) {
+       }else{
+           name = songs[i]["track"]["name"];
+           artist = [];
+           var artNum = songs[i]["track"]["artists"].length;
+           for (var j =0; j < artNum; j ++){
+               artist.push(songs[i]["track"]["artists"][j]["name"]);
+           }
+           album = songs[i]["track"]["album"]["name"];
+           itunesSearch(name, artist, album);
+           setTimeout(function() { findItunesEquiv(i+1,songs); }, 5000);
+       }
+   }
+
+
+
+   function playListAdd(name, artist, composer, album,genre){
        var n = name;
        var a = artist;
        var c = composer;
        var aa  = album;
+       var g = genre;
     if (!name){
         n = "	";
     }
@@ -195,28 +298,54 @@
     if (!album){
         aa = "	";
     }
+    if (!genre){
+           g = "	";
+       }
 
-    return "\n"+n+"	"+a+"	"+c+"	"+aa+"								0	0	0	0	0	0	0					256	44100		Apple Music AAC audio file							";
+    return "\n"+n+"	"+a+"	"+c+"	"+aa+"						"+g+"	0	0	0	0	0	0	0					256	44100		Apple Music AAC audio file							";
 
    }
+
+   function show(v){
+       console.log(v["results"]);
+       countDown--;
+       if ((v["resultCount"] < 1)||(!v["results"][0]["isStreamable"])){
+           console.log("bye");
+       }else{
+           console.log("hi");
+          var name = v["results"][0]["trackName"];
+          var artist = v["results"][0]["artistName"];
+          var album = v["results"][0]["collectionName"];
+          var genre = v["results"][0]["primaryGenreName"];
+          playListDL.push(playListAdd(name,artist,null,album,genre));
+       }
+       if (countDown < 1){
+           download();
+       }
+   }
+
    var textFile
    function createFile(songs){
-       var playListDL = [];
+       playListDL = [];
        playListDL.push("Name	Artist	Composer	Album	Grouping	Work	Movement Number	Movement Count	Movement Name	Genre	Size	Time	Disc Number	Disc Count	Track Number	Track Count	Year	Date Modified	Date Added	Bit Rate	Sample Rate	Volume Adjustment	Kind	Equalizer	Comments	Plays	Last Played	Skips	Last Skipped	My Rating	Location");
 
-               $.ajax({
-                   url: "https://itunes.apple.com/search?term=forever+drake&country=CA&media=music&limit=1&lang=en_us&explicit=Yes",
 
-                   success: function(response) {
-                       console.log(response);
-                   }
-               });
+
        for (var i = 0; i < songs.length; i++){
-            console.log (songs[i]["track"]["name"]);
-           console.log (songs[i]["track"]["name"]);
+           name = songs[i]["track"]["name"];
+           artist = [];
+           var artNum = songs[i]["track"]["artists"].length;
+           for (var j =0; j < artNum; j ++){
+               artist.push(songs[i]["track"]["artists"][j]["name"]);
+           }
+           album = songs[i]["track"]["album"]["name"];
+           itunesSearch(name, artist, album);
        }
-       playListDL.push(playListAdd("One Minute","Isaiah Dreads", "Thomas Broderick, Anthony Bamgboye & Isaiah Hamilton","Lone Wolf - EP"));
 
+
+   }
+
+   function download(){
        var blob = new Blob(playListDL, {type: "text/plain;charset=utf-8"});
        textFile = window.URL.createObjectURL(blob);
        var link = document.getElementById('download');

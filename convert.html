@@ -4,6 +4,7 @@
 </script>
 </head>
 <body>
+<div style="width: 1000px; margin: 0 auto;">
 <h1>Convert Spotify To Apple Music</h1>
 <button onclick="loginspotify()">Load Playlists</button>
 <script>
@@ -24,9 +25,11 @@
                     i += "&show_dialog=true";
                     i += "&state=awesomePaviFindMeEverywhere"
 
-            tmp = window.open(i, "Spotify", "_Blank")
+           // tmp = window.open(i, "Spotify", "_Blank")
+            window.location.href = i;
         }
     }
 </script>
+</div>
 </body>
 </html>
