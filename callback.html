@@ -2,11 +2,11 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
     </script>
-    <link href="./load.css" rel="stylesheet" type="text/css">
+    <link href="./general.css" rel="stylesheet" type="text/css">
 </head>
-<body style="width: 800px; margin: 0px auto;">
+<body id="main" class="background1" style="width: 800px; margin: 0 auto;">
 
-<h1 id="download">CallBack</h1>
+<h1 id="download" style="text-align: center">CallBack</h1>
 <div style="float: left">
     <h2 id="show" style ="margin-bottom: 0;float: left;"></h2>
     <div id = "load" class="none"></div>
@@ -94,10 +94,10 @@
                     console.log(i);
                     var y = document.createElement("TR");
                     y.setAttribute("id", i);
-                    y.style.backgroundColor= "#AAAAAA";
+                    y.style.backgroundColor= "rgba(170,170,170,0.2)";
                     y.onclick = tracks;
                     if (i % 2 == 0){
-                        y.style.backgroundColor= "#EEEEEE";
+                        y.style.backgroundColor= "rgba(170,170,170,0.5)";
                     }
                     tble.appendChild(y);
                     var z = document.createElement("TD");
@@ -183,9 +183,10 @@
        document.body.removeChild(tble);
 
        console.log(songs);
-
+       var tblecont = document.createElement("div");
+       tblecont.style = "margin: auto;"
             tble = document.createElement("TABLE");
-           tble.style = ""
+           tble.style = "margin: auto;"
            tble.setAttribute("id", "song");
 
 
@@ -193,13 +194,14 @@
                console.log(i);
                var y = document.createElement("TR");
                y.setAttribute("id", i);
-               y.style.backgroundColor= "#AAAAAA";
+               y.style.backgroundColor= "rgba(170,170,170,0.2)";
             //  y.onclick = tracks;
                if (i % 2 == 0){
-                   y.style.backgroundColor= "#EEEEEE";
+                   y.style.backgroundColor=  "rgba(170,170,170,0.5)";
                }
                tble.appendChild(y);
                var z = document.createElement("TD");
+               z.width="400px"
                var spotyEmbed = document.createElement("iframe");
                spotyEmbed.src = "https://embed.spotify.com/?uri="+songs[i]['track']["uri"];
                spotyEmbed.setAttribute("frameborder","0");
@@ -217,6 +219,7 @@
 //               t3.verticalAlign = "middle";
 
                var zz = document.createElement("TD");
+               zz.width="400px"
                zz.setAttribute("id", i+"APPLEPLAYER");
 
                //z.appendChild(t1);
@@ -228,10 +231,13 @@
            }
 
 
-           document.body.appendChild(tble);
+           document.body.appendChild(tblecont);
+       tblecont.appendChild(tble);
+       document.getElementById("show").style.color = "white";
            document.getElementById("show").innerHTML = "Finding Itunes Tracks";
        document.getElementById("load").className = "loader";
 
+       document.getElementById("main").className ="background2";
 
 
 
@@ -269,7 +275,7 @@
            var tmp = document.createElement("iframe");
            tmp.src = "//tools.applemusic.com/embed/v1/song/" + v["results"][0]["trackId"] + "?country=us";
            tmp.setAttribute("height", "110px");
-           tmp.setAttribute("width", "auto");
+           tmp.setAttribute("width", "100%");
            tmp.setAttribute("frameborder", "0");
 
            tble.appendChild(tmp);

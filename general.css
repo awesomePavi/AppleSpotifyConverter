@@ -16,3 +16,28 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+
+.background1 {
+    height: 100%;
+    background: #ababab;
+    background-image: url('https://www.pavipath.com/Img/BG.jpg');
+}
+
+.background2 {
+    height: 100%;
+
+    background: linear-gradient(90deg, #3AB75C 50%, #FFFFFF 50%) !important;
+}
+
+
+.content {
+    width: 800px;
+    height: 300px;
+    left:0; right:0;
+    top:0; bottom:0;
+    margin:auto;
+    max-width:100%;
+    max-height:100%;
+    overflow:auto;
+}
