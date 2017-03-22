@@ -1,0 +1,575 @@
+<html>
+<head>
+   <title>Apple Music To Spotify</title>
+  <link rel="icon" type="image/png" href="../Assets/icon.png"/>
+    <link href="../Assets/general.css" rel="stylesheet" type="text/css">
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+  </script>
+
+    <!-- GOOGLE ANALYTICS-->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-94021040-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+	 <style>
+        body{
+            overflow-x: hidden;
+        }
+        div.Links{
+            text-align: center; 
+            background: white;
+            margin: 1em;
+            padding: 1em;
+            box-sizing: border-box;
+            /*box-shadow: 10px 10px 5px grey;*/
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .loading{
+        	display: flex;
+        	align-items: center;
+        	justify-content: center;
+        }
+
+        .loadIMG div{
+        	z-index: 100;
+			position: absolute;
+        	/* The animation part: */
+			animation-name: spinclock;
+			animation-duration: 4000ms;
+			animation-iteration-count: infinite;
+			animation-timing-function: linear;
+        }
+
+        .loadIMG div:nth-child(2) {
+        	z-index: 101;
+        	width: 50px;
+			height: 50px;
+			margin: -25px 0 0 -25px;
+			
+			border-radius: 50%;
+			border: 3px solid transparent;
+			border-top-color: #34DB73;
+			animation-duration: 3000ms;
+        }
+
+        .loadIMG div:nth-child(3) {
+        	z-index: 102;
+			width: 100px;
+			height: 100px;
+			margin: -50px 0 0 -50px;
+			
+			border-radius: 50%;
+			border: 3px solid transparent;
+			border-top-color: #3498db;
+			animation-duration: 1500ms;
+		}
+
+		 .loadIMG div:nth-child(1) {
+		 	z-index: 103;
+			width: 75px;
+			height: 75px;
+			margin: -37.5px 0 0 -37.5px;
+
+			border-radius: 50%;
+			border: 3px solid transparent;
+			border-top-color: #DB3434;
+			animation-duration: 500ms;
+		}
+
+
+
+        @keyframes spinclock {
+			from {transform:rotate(0deg);}
+			to {transform:rotate(360deg);}
+		}
+
+    }
+    </style>
+</head>
+<body id="main" class="background1" style="width: 80%; margin: 0 auto; padding: 0;">
+ <div style="padding: 2em; display: flex; justify-content: center; width: 100%">
+          <img src="../Assets/AtoS.png" height="150">
+      </div>
+       <div class="Links"  style="text-align: center; width: 100%;">
+           <h2>ABOUT</h2>
+           <div style="text-align: left; width: 70%; padding: 0 0 0 10%">
+               <p>
+                   This webstie was originally developed becasue I was sent a "Litt" playlist but the issue was the playlist was an Apple Music Playlist. I am an avid spotify user, and when I saw there were 80 songs on said playist I did not want to manually add them all.
+               </p>
+               <p>
+                   This website using the Spotify API and the applemusic toolbox, takes an Apple music playlist, extracts all the songs and then creates an equivalent spotify playlist in your spotify library.
+               </p>
+           </div>
+       </div>
+
+  <div id= "ContentHolder" style="display: none; justify-content: center; width: 100%;">
+       <div id="PlaylistHolder" class="Links"  style="text-align: center; width: 70%">
+           <h2>Enter - Apple Music Playlist</h2>
+           <textarea id="playlist" rows="4" style="width: 100%" placeholder="Paste Apple Music Playlist URL here"></textarea>
+       </div>
+
+        <div id="GetApplePlaylistInfo" class="Links" onclick="LoadPlaylist()" style="text-align: center;  width: 30%; padding: 1em 3em 1em 3em; margin: 1em -1em 1em 1em;">
+          <h1> Get Playlist Info </h1>
+          <img src="../Assets/Apple.png" height="100px">
+      </div>
+  </div>
+
+  <div id="LoadPLAYLISTS" style="display: none; justify-content: center; width: 100%;">
+   <div id="PlaylistHolder" class="Links"  style="text-align: center; width: 100%">
+           <div class="loadIMG">
+           <div></div>
+           <div></div>
+           <div></div>
+           </div>
+       </div>
+  </div>
+
+ <div id="COULDNTFIND" class="Links"  style="text-align: center; width: 100%; display: none">
+     <h2>Add Manually</h2>
+
+ </div>
+
+
+<!--    <div style="display: flex; justify-content: center; width: 100%; ">
+       <div class="Links"  style="width: 50%">
+           <iframe style="padding: 0em" height="500px" frameborder="0" width="100%" src="http://tools.applemusic.com/embed/v1/playlist/pl.0797d46e033741ca8dfceeaf0f3a1df6?country=us"></iframe>
+       </div>
+       <div class="Links" onclick="loginspotify()" style="text-align: center;  width: 50%; padding: 1em 3em 1em 3em; margin: 1em -1em 1em 1em;">
+      
+          <h1> Add To Spotify </h1>
+          <img src="Spotify.png" height="200px">
+         
+      </div>
+  </div>
+
+  <div class ="loading" style="width: 100%; background: white; height: 300px;">
+  <div class="loadIMG">
+  	<div></div>
+  	<div></div>
+  	<div></div>
+  </div>
+  </div> -->
+       
+<!-- 
+	<h1 id="download" style="text-align: center">CallBack</h1> 
+	<div style="float: left">
+		<h2 id="show" style ="margin-bottom: 0;float: left;"></h2>
+		<div id = "load" class="none"></div>
+	</div>
+
+	<input type="button" onclick="addsongsToSpotify()" style="width: 100%; height: 2em">
+
+	<div style="clear: both;"></div>
+
+	<input type="text" id="playlist">
+	<input type="button" onclick="LoadPlaylist()">
+	<div id="ApplePlaylist"></div> -->
+
+	<script>
+		var userId = "";
+		var playlistId = "";
+		var songs = [];
+		var playlistTitle = "";
+		var playlistURI = "";
+
+		var playlists = {};
+		var goThrough = 0;
+
+		var unableToFind = [];
+
+		var query = window.location.href.split("#")[1];
+		console.log(query);
+
+		if (query && query.includes("denied"))
+		{
+			console.log("end");
+
+		}else if (query && query.includes("access_token")){
+			breakDownQuery(query);
+		}else{
+			// Re-Login
+			{
+            var e = 400,
+                    n = 500,
+                    r = (screen.width / 2 - e / 2, screen.height / 2 - n / 2, {
+                        client_id: "65543fb25d324ac295ca22dbd8f11186",
+                        redirect_uri: "http://pavipath.com",
+                        scope: "user-read-private playlist-read-private playlist-modify-public playlist-modify-private playlist-read-collaborative playlist-read-collaborative playlist-modify-private",
+                        response_type: "token"
+                    }),
+                    i = "https://accounts.spotify.com/authorize?" + "client_id=65543fb25d324ac295ca22dbd8f11186";
+                    i += "&response_type=token";
+                    i += "&redirect_uri=http%3a%2f%2fpavipath.com%2fAppleToSpotify%2fcallback.html";
+                    i += "&scope=user-read-private%20playlist-read-private%20playlist-read-collaborative%20playlist-modify-private";
+                    i += "&show_dialog=true";
+                    i += "&state=awesomePaviFindMeEverywhere"
+
+           // tmp = window.open(i, "Spotify", "_Blank")
+            window.location.href = i;
+        }
+		}
+
+		function breakDownQuery(query) {
+			partsQuery = {};
+
+			var parts = query.split('&');
+			for (var i = 0; i < parts.length; i++) {
+				splitOn = parts[i].split('=');
+				partsQuery[splitOn[0]] = splitOn[1];
+			}
+			console.log(partsQuery);
+
+			// document.getElementById("show").innerHTML = query;
+
+			$.ajax({
+				url: 'https://api.spotify.com/v1/me',
+				headers: {
+					'Authorization': "Bearer " + partsQuery["access_token"]
+				},
+				success: function(response) {
+					console.log(response);
+					userId = response['id'];
+					getPlaylistInfo(0);
+					document.getElementsByTagName('body')[0].removeChild(document.getElementById("LoadPLAYLISTS"));
+					document.getElementById("ContentHolder").style.display = "flex";
+					return ;
+				},
+				error: function() {
+					alert('Error - Unable To Get Authorization');
+				}
+			});
+		}
+
+		function LoadPlaylist(){
+			console.log(playlists);
+
+			var parent = document.getElementById("GetApplePlaylistInfo");
+			parent.setAttribute('onclick',"");
+			parent.setAttribute('class','Links loading');
+			parent.innerHTML = "";
+
+			loader = document.createElement('div');
+			loader.setAttribute('class','loadIMG');
+
+			var tmp = document.createElement('div');
+			loader.appendChild(tmp);
+			var tmp = document.createElement('div');
+			loader.appendChild(tmp);
+			var tmp = document.createElement('div');
+			loader.appendChild(tmp);
+
+			parent.appendChild(loader);
+
+			URLTMP = document.getElementById('playlist').value;
+		    // console.log(URLTMP);
+		    // console.log(URLTMP.indexOf('idpl'));
+		    URLTMP = URLTMP.substring(URLTMP.indexOf('idpl')+2);
+
+		    URLUSE = "http://tools.applemusic.com/embed/v1/playlist/"+URLTMP+"?country=us"
+
+		    tmp = document.createElement('iframe');
+		    tmp.setAttribute('style',"padding: 0em");
+		    tmp.setAttribute('height',"500px");
+		    tmp.setAttribute('frameborder',"0");
+		    tmp.setAttribute('width',"100%");
+
+
+		    tmp.setAttribute('src',URLUSE);
+
+		    $.get(('https://dnslookup.azurewebsites.net/CurlCustom.php?url='+URLUSE), function(data) {
+//            $.get(URLUSE, function(data) {
+		    	// console.log(data);
+		     // console.log($(data).find('.heroMeta').find('.title')[0].innerText);
+
+		     playlistTitle = $(data).find('.heroMeta').find('.title')[0].innerText;
+		     test1_elements = $(data).find('#tracks');
+
+		     tmpTitle = $(test1_elements).find('.title');
+		     tmpArtits = $(test1_elements).find('.artist');
+
+		     for (var songNum = 0; songNum < tmpTitle.length; songNum++){
+		     	var song = {Title : tmpTitle[songNum].innerHTML.trim(), Artist : tmpArtits[songNum].innerText.trim()};
+		     	songs.push(song);
+		     }
+		     gotApplePlaylistData();
+		 });
+
+		  var parent = document.getElementById('PlaylistHolder');
+		  parent.setAttribute('id','ApplePlaylist');
+		  parent.innerHTML = "";
+		  parent.appendChild(tmp);
+		}
+
+
+
+		function gotApplePlaylistData(){
+			var parent = document.getElementById("ApplePlaylist");
+			parent.style.width = "50%";
+
+			parent = document.getElementById("GetApplePlaylistInfo");
+			parent.innerHTML = "";
+			parent.setAttribute('class','Links');
+			parent.style.width = "50%";
+
+			var tmp = document.createElement('h1');
+			tmp.innerHTML = "Add To Spotify";
+			parent.appendChild(tmp);
+			tmp = document.createElement('img');
+			tmp.setAttribute('src','../Assets/Spotify.png');
+			tmp.setAttribute('height','200px')
+			parent.appendChild(tmp);
+
+			parent.setAttribute('onclick',"addsongsToSpotify()");
+		}
+
+		function loadNewPlaylist(){
+
+			var tmp = document.createElement('iframe');
+			tmp.setAttribute('style',"padding: 0em");
+			tmp.setAttribute('height',"500px");
+			tmp.setAttribute('frameborder',"0");
+			tmp.setAttribute('width',"100%");
+			tmp.setAttribute('allowtransparency',"true");
+			tmp.setAttribute('frameborder',"0");
+			tmp.setAttribute('src',"https://embed.spotify.com/?uri="+playlistURI);
+
+			var parent = document.getElementById('GetApplePlaylistInfo');
+			parent.innerHTML = "";
+			parent.style.padding = '0em 1em';
+            parent.style.margin = '1em -1em 1em 0em';
+			parent.appendChild(tmp);
+
+			showCouldntFind();
+
+            $('html, body').animate({
+                scrollTop: $('#GetApplePlaylistInfo').offset().top - 20
+            }, 'slow');
+		}
+
+		function showCouldntFind(){
+
+            var parent = document.getElementById('COULDNTFIND');
+            parent.style.display = "block";
+            for (var i=0; i < unableToFind.length; i++){
+                var holder = document.createElement('div');
+                holder.setAttribute('style','width: 100%; text-align: left; background: #FAFAFA;');
+
+                var tmp = document.createElement('h4');
+                tmp.innerHTML = "Track: "+unableToFind[i]['Title'];
+                tmp.setAttribute('style','margin: 0em; padding 0em');
+                holder.appendChild(tmp);
+
+                var tmp = document.createElement('h4');
+                tmp.innerHTML = "By: "+unableToFind[i]['Artist'];
+                tmp.setAttribute('style','margin: 0em; padding 0em');
+                holder.appendChild(tmp);
+
+                parent.appendChild(holder);
+
+                var tmp = document.createElement('br');
+                parent.appendChild(tmp);
+            }
+
+        }
+
+		function addsongsToSpotify(){
+
+			var parent = document.getElementById("GetApplePlaylistInfo");
+			parent.setAttribute('onclick',"");
+			parent.setAttribute('class','Links loading');
+			parent.innerHTML = "";
+
+			loader = document.createElement('div');
+			loader.setAttribute('class','loadIMG');
+
+			var tmp = document.createElement('div');
+			loader.appendChild(tmp);
+			var tmp = document.createElement('div');
+			loader.appendChild(tmp);
+			var tmp = document.createElement('div');
+			loader.appendChild(tmp);
+
+			parent.appendChild(loader);
+
+			checkPlaylistExists();
+
+			playlists[playlistTitle] = true;
+
+			$.ajax({
+				type: 'POST',
+				url: 'https://api.spotify.com/v1/users/'+userId+'/playlists',
+				data: JSON.stringify({
+					'name': playlistTitle,
+					'public': false
+				}),
+				dataType: 'json',
+				headers: {
+					'Authorization': "Bearer " + partsQuery["access_token"]
+				},
+				contentType: 'application/json',
+				success: function(result) {
+					alert('Playlist Added');
+					console.log(result);
+					playlistId = result['id'];
+
+					playlistURI = result['uri'];
+					goThrough = 0;
+					lookUp(0,addTracksToSpotify);
+				},
+				error: function() {
+					alert('Error - Unable To add Playlist');
+				}
+			});
+		}
+
+		function addTracksToSpotify(){
+			
+			console.log('https://api.spotify.com/v1/users/'+userId+'/playlists/'+playlistId+'/tracks');
+
+			if (goThrough < songs.length){
+				var [sendCSV, shift] = csvDo(goThrough,20);
+				console.log(sendCSV);
+				goThrough += shift;
+				$.ajax({
+					type: 'POST',
+					url: 'https://api.spotify.com/v1/users/'+userId+'/playlists/'+playlistId+'/tracks',
+					data: JSON.stringify({'uris' : sendCSV}),
+					dataType: 'json',
+					headers: {
+						'Authorization': "Bearer " + partsQuery["access_token"]
+					},
+					contentType: 'application/json',
+					success: function(result) {
+					// alert('Songs Added');
+					console.log('Added');
+					console.log(result);
+					addTracksToSpotify();
+				},
+				error: function() {
+					alert('Error - Unable To add Songs');
+				}
+			});
+			}else{
+				loadNewPlaylist();
+			}
+
+		}
+
+		function csvDo(start,end){
+			var send = [];
+			send.push(songs[start]);
+			var numSongs = 1;
+
+			for(var i = start; (i < (start+end) && i < songs.length); i++){
+				send.push(songs[i]);
+				numSongs++;
+			}
+
+			return [send, numSongs];
+		}
+
+		function getPlaylistInfo(offSet){
+
+			$.ajax({
+				url: 'https://api.spotify.com/v1/me/playlists?offset='+offSet+'&limit=20',
+				headers: {
+					'Authorization': "Bearer " + partsQuery["access_token"]
+				},
+				success: function(response) {
+					console.log(response);
+					var flipThrough = response["items"].length;
+					for (var i =0; i < flipThrough; i++){
+						playlists[response["items"][i]['name']]=true;
+						goThrough++;
+					}
+
+					if(goThrough < response["total"]){
+						getPlaylistInfo(goThrough);
+					}else{
+						return;
+					}
+				},
+				error: function() {
+					alert('Error - Unable To Get Spotify Playlist Info');
+				}
+			});
+		}
+
+		function checkPlaylistExists(){
+			if (playlists[playlistTitle]){
+			    var tmp = playlistTitle;
+                if (confirm("Playlist with this name already exists. Rename?") == true) {
+                    playlistTitle = prompt("What do you want to call it?");
+                    if (playlistTitle == "" ||  !playlistTitle) {
+                        blankPlaylist(tmp);
+                    }else if(playlists[playlistTitle]){
+                        checkPlaylistExists();
+                    }
+                }
+			}
+		}
+
+		function blankPlaylist(OGNAME){
+            playlistTitle = OGNAME;
+            if (confirm("You didn't enter anything, Do you still want to Rename?") == true) {
+                playlistTitle = prompt("What do you want to call it?");
+                if (playlistTitle == "" ||  !playlistTitle) {
+                    blankPlaylist(OGNAME);
+                }else if(playlists[playlistTitle]){
+                    checkPlaylistExists();
+                }
+            }
+        }
+
+		function searchIfy(searchInfo){
+			return searchInfo.replace(/ /g, '+');
+		}
+
+		function lookUp(id,func){
+			if (id < songs.length){
+				var searchSpotify = 'https://api.spotify.com/v1/search?q='+searchIfy(songs[id]['Title'])+'+'+searchIfy(songs[id]['Artist'])+'&type=track&limit=1';
+			$.ajax({
+				url: searchSpotify,
+				success: function(response) {
+                    // console.log(response);
+                    // console.log(response['tracks']['items'][0]['uri']);
+                    try {
+                        songs[id] = response['tracks']['items'][0]['uri'];
+//                        if (response['tracks']['href'].includes("feat.")) {
+//                            console.log("---------------------FOUND---------------------");
+//                            console.log(response);
+//
+//                            console.log("HASSSS");
+//
+//                            console.log("---------------------FOUND---------------------");
+//                        }
+                        lookUp(id + 1, func);
+                    } catch (error) {
+                        unableToFind.push(songs[id]);
+
+                        songs.splice(id, 1);
+                        lookUp(id, func);
+                    }
+                },
+                error: function() {
+					alert('Error - Unable To find Songs');
+				}
+                 });
+		}else{
+			func();
+		}
+	}
+
+
+</script>
+</body>
+</html>
