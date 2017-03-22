@@ -1,8 +1,8 @@
 <html>
 <head>
     <title>Spotify To Apple Music</title>
-    <link rel="icon" type="image/png" href="./Assets/icon.png"/>
-    <link href="./Assets/general.css" rel="stylesheet" type="text/css">
+    <link rel="icon" type="image/png" href="../Assets/icon.png"/>
+    <link href="../Assets/general.css" rel="stylesheet" type="text/css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
     </script>
@@ -21,7 +21,7 @@
 
 </head>
 <body class="background1">
-<img src="./Assets/StoA.png" height="100px">
+<img src="../Assets/StoA.png" height="100px">
 <div class="content">
 <h1>Convert Spotify To Apple Music</h1>
 <button onclick="loginspotify()">Load Playlists</button>
@@ -29,7 +29,8 @@
     <Br>
     <h2>NOTICE:</h2>
     <a>
-        Your mileage may vary due to restrictions on Itunes search API, to try and counter the limitation a track is looked up 4 seconds apart, since the last official
+        Your mileage may vary due to restrictions on I
+        Tunes search API, to try and counter the limitation a track is looked up 4 seconds apart, since the last official
         limit on ITunes search API is 20 calls per minute or 1 call every 3 seconds.
     </a>
 <script>
@@ -45,7 +46,8 @@
                     }),
                     i = "https://accounts.spotify.com/authorize?" + "client_id=06eb65e8fccd4ee5b2f8cd7933f1d413";
                     i += "&response_type=token";
-                    i += "&redirect_uri=http%3a%2f%2fpavipath.com%2fSpotifyToApple%2fcallback.html";
+                i += "&redirect_uri=http%3a%2f%2fwww.ASPlaylist.tk%2fSpotifyToApple%2fcallback";
+//                    i += "&redirect_uri=http%3a%2f%2fpavipath.com%2fSpotifyToApple%2fcallback.html";
                     i += "&scope=user-read-private%20playlist-read-private";
                     i += "&show_dialog=true";
                     i += "&state=awesomePaviFindMeEverywhere"

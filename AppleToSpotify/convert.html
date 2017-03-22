@@ -1,0 +1,108 @@
+<html>
+<head>
+
+  <title>Apple Music To Spotify</title>
+  <link rel="icon" type="image/png" href="../Assets/icon.png"/>
+    <link href="../Assets/general.css" rel="stylesheet" type="text/css">
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+  </script>
+
+    <!-- GOOGLE ANALYTICS-->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-94021040-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+    <style>
+        body{
+            overflow-x: hidden;
+        }
+        div.Links{
+            text-align: center; 
+            background: white;
+            margin: 1em;
+            padding: 1em;
+            box-sizing: border-box;
+            /*box-shadow: 10px 10px 5px grey;*/
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        div.Links:hover{
+            text-align: center; 
+            background: white;
+            margin: 1em;
+            padding: 1em;
+            box-sizing: border-box;
+            /*box-shadow: 10px 10px 5px blue;*/
+            box-shadow: 0 4px 8px 0 rgba(0, 191, 255, 0.2), 0 6px 20px 0 rgba(0, 191, 255, 0.19);
+        }
+    }
+</style>
+</head>
+<body class="background1" style="padding: 0; margin: 0 auto; width: 80%">
+   <!--  <div style="text-align: center; width: 100%; background: rgba(255,255,255,0.5); padding: 0.5em;">
+        <h1> Apple Music To Spotify</h1>
+    </div>
+    display: flex; align-items: center;
+    <br> -->
+
+    <div style="padding: 2em; display: flex; justify-content: center; width: 100%">
+          <img src="../Assets/AtoS.png" height="150">
+      </div>
+
+      <div style="display: flex; justify-content: center; width: 100%">
+       <div class="Links"  style="text-align: center; width: 100%">
+           <h2>ABOUT</h2>
+           <div style="text-align: left; width: 70%; padding: 0 0 0 10%">
+               <p>
+                   This website was originally developed because I was sent a "Litt" playlist but the issue was the playlist was an Apple Music Playlist. I am an avid Spotify user, and when I saw there were 80 songs on said playlist I did not want to manually add them all.
+               </p>
+               <p>
+                   This website using the Spotify API and the Apple Music toolbox, takes an Apple music playlist, extracts all the songs and then creates an equivalent Spotify playlist in your Spotify library.
+               </p>
+           </div>
+       </div>
+
+       <div class="Links" onclick="loginspotify()" style="text-align: center;  width: 30%; padding: 1em 3em 1em 3em">
+          <h1> Login To Spotify </h1>
+          <img src="../Assets/Spotify.png" height="100px">
+      </div>
+  </div>
+
+
+
+
+
+<script>
+    loginspotify = function() {
+        {
+            var e = 400,
+            n = 500,
+            r = (screen.width / 2 - e / 2, screen.height / 2 - n / 2, {
+                client_id: "65543fb25d324ac295ca22dbd8f11186",
+                redirect_uri: "http://pavipath.com",
+                scope: "user-read-private playlist-read-private playlist-modify-public playlist-modify-private playlist-read-collaborative playlist-read-collaborative playlist-modify-private",
+                response_type: "token"
+            }),
+            i = "https://accounts.spotify.com/authorize?" + "client_id=65543fb25d324ac295ca22dbd8f11186";
+            i += "&response_type=token";
+                i += "&redirect_uri=http%3a%2f%2fwww.ASPlaylist.tk%2fAppleToSpotify%2fcallback";
+          //  i += "&redirect_uri=http%3a%2f%2fpavipath.com%2fAppleToSpotify%2fcallback.html";
+            i += "&scope=user-read-private%20playlist-read-private%20playlist-read-collaborative%20playlist-modify-private";
+            i += "&show_dialog=true";
+            i += "&state=awesomePaviFindMeEverywhere"
+
+           // tmp = window.open(i, "Spotify", "_Blank")
+           window.location.href = i;
+       }
+   }
+</script>
+</body>
+</html>
