@@ -21,7 +21,7 @@
 .background1 {
     height: 100%;
     background: #ababab;
-    background-image: url('https://www.pavipath.com/Img/BG.jpg');
+    background-image: url('./BG.jpg');
 }
 
 .background2 {
